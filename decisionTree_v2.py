@@ -52,6 +52,27 @@ def majority_label(data):
     # 3. Gunakan Counter.most_common(1) untuk mendapatkan pasangan (label, jumlah) yang paling umum, lalu ambil labelnya.
     return Counter(labels).most_common(1)[0][0]
 
+def evaluate_accuracy(tree, data, feature_names):
+    """Inisialisasi penghitung prediksi benar"""
+    correct = 0
+    # Hitung total jumlah data
+    total = len(data)
+    
+    # Iterasi setiap baris data dalam dataset
+    for row in data:
+        # Prediksi hasil menggunakan pohon keputusan
+        prediction = predict(tree, row)
+        # Ambil label aktual dari baris data (di indeks terakhir)
+        actual = row[-1]
+        # Jika prediksi sama dengan label sebenarnya, tambahkan ke penghitung benar
+        if prediction == actual:
+            correct += 1
+    
+    # Hitung akurasi sebagai persentase
+    accuracy = correct / total * 100
+    # Kembalikan nilai akurasi
+    return accuracy
+
 # --- FUNGSI UTAMA PEMBANGUNAN POHON ---
 
 def build_tree(data, attributes):
@@ -313,3 +334,10 @@ for row in test_data:
     result = predict(decision_tree, row)
     # Cetak data input dan hasil prediksinya.
     print(f"Data: {row} -> Beli? {result}")
+
+# Mencetak header untuk akurasi prediksi.
+print("\n==== AKURASI PREDIKSI ====")
+# Evaluasi akurasi terhadap dataset
+accuracy = evaluate_accuracy(decision_tree, dataset, feature_names)
+# Cetak hasil akurasi
+print(f"Akurasi pada training data: {accuracy:.2f}%")
